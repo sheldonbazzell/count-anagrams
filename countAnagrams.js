@@ -1,5 +1,5 @@
 function countAnagrams(arr) {
-	var ret = {};
+	var ret = {}, temp = new Set();
 
 	for(var word1 in arr) {
 		for(var word2 in arr) {
@@ -8,31 +8,24 @@ function countAnagrams(arr) {
 				continue;
 			} else {
 				if(isAnagram(arr[word1], arr[word2])) {
+					temp.add(arr[word2]);
 					// they are anagrams
 					// is arr[word2] in the ret object?
-					if(!ret[arr[word2]]) {
-						ret[arr[word2]] = 1;
-					} else {
+					if(arr[word2] in ret) {
 						ret[arr[word2]]++;
+					} else {
+						if(temp.has(arr[word1]) || temp.has(arr[word2])) {
+							continue;
+						} else {
+							ret[arr[word2]] = 1;
+						}
 					}
 				// they are not anagrams, add to ret object
 				} else {
-					ret[arr[word1]] = 1;
-				}
-			}
-		}
-	}
-	// remove unnecessary keys in ret object
-	for(var key in ret) {
-		for(var key2 in ret) {
-			if(key == key2) {
-				continue;
-			} else {
-				if(isAnagram(key, key2)) {
-					if(ret[key] > ret[key2]) {
-						delete ret[key2]
+					if(temp.has(arr[word1])) {
+						continue;
 					} else {
-						delete ret[key]
+						ret[arr[word1]] = 1;
 					}
 				}
 			}
@@ -76,5 +69,5 @@ function isAnagram(word1, word2) {
 	return false;
 }
 
-var test = ['dog', 'ract', 'god', 'cat', 'cram', 'marc', 'arcm', 'act', 'tac', 'cart', 'track', 'trac', 'ogd']
+var test = ['dog', 'ract', 'god', 'cat', 'act', 'tac', 'trac', 'milk']
 console.log(countAnagrams(test));
